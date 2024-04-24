@@ -17,8 +17,7 @@ pacman::p_load(tidyverse, kableExtra, plotly)
 
 ## Monthly Airline Passenger Numbers 1949-1960
 
-:::{.panel-tabset}
-
+::: panel-tabset
 ### Dataset
 
 ```{r}
@@ -52,5 +51,4 @@ plot <- ggplot(data = airpass_year,
 ggplotly(plot)
 
 ```
-
 :::
