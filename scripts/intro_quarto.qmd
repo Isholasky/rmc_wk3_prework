@@ -1,0 +1,56 @@
+---
+title: "Intro to Quarto Documents"
+author: "Olaitan Elihou Adje"
+format: 
+  html:
+    theme: zephyr
+editor: visual
+---
+
+```{r include = FALSE}
+# Set chunk options
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+# Load packages
+if(!require(pacman)) install.packages("pacman")
+pacman::p_load(tidyverse, kableExtra, plotly)
+```
+
+## Monthly Airline Passenger Numbers 1949-1960
+
+:::{.panel-tabset}
+
+### Dataset
+
+```{r}
+
+airpassengers <- AirPassengers %>% 
+  matrix(nrow = 12, byrow = T, dimnames = list(c(seq(1949, 1960, by = 1)),
+                                    substr(month.name, start = 1, stop = 3))) %>%
+  as_tibble(rownames = "Year")
+
+kable(airpassengers)
+  
+```
+
+### Line graph
+
+```{r echo = FALSE, warning = FALSE, message = FALSE}
+
+airpass_year <- airpassengers %>% 
+  pivot_longer(!Year, names_to = "Month", values_to = "Passengers") %>%
+  group_by(Year) %>% 
+  summarise(Passengers = sum(Passengers, na.rm = FALSE))
+
+plot <- ggplot(data = airpass_year,
+       aes(x = Year, y = Passengers, group = 1)) +
+  geom_line(color = "blue", linewidth = 1, alpha = 0.25) +
+  geom_point(color = "blue") +
+  labs(title = "Trend of air passengers per year",
+       subtitle = "USA, 1949 - 1960") +
+  theme_minimal()
+
+ggplotly(plot)
+
+```
+
+:::
